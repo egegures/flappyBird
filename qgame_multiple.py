@@ -5,52 +5,53 @@ import time
 import numpy as np
 import random
 from collections import defaultdict
-import math 
+import math
 import datetime
 
 # Q-Learning Parameters
-LEARNING_RATE = 0.1 # Learning rate for Q-Learning
+LEARNING_RATE = 0.1  # Learning rate for Q-Learning
 DISCOUNT_FACTOR = 0.8  # Discount factor for future rewards
-EPSILON = 0 # Exploration rate //NOT USED
-NUM_EPISODES = 100000000 # Number of training episodes
+EPSILON = 0  # Exploration rate //NOT USED
+NUM_EPISODES = 100000000  # Number of training episodes
 
 # Q-Table to store Q-values for state-action pairs
+
+
 class QGame:
-    def __init__(self, q_table = defaultdict(lambda: [0, 0]), epsilon = 0.4, learn_mode = "fixed"):
+    def __init__(self, q_table=defaultdict(lambda: [0, 0]), epsilon=0.4, learn_mode="fixed"):
         py.init()
-        
+
         self.learning_rate = LEARNING_RATE
         self.discount_factor = DISCOUNT_FACTOR
         self.epsilon = epsilon
         self.num_episodes = NUM_EPISODES
-        
+
         self.q_table = q_table
-        
+
         self.WIDTH = 400
         self.HEIGHT = 600
-        
+
         self.window = py.display.set_mode((self.WIDTH, self.HEIGHT))
-        
+
         self.TIME_STEP = 0.0166
-        
+
         self.color = (0, 0, 0)
         py.display.set_caption("Flappy Bird")
-        self.bird = Bird(self.window,"qlearn")
+        self.bird = Bird(self.window, "qlearn")
         self.obstacle = Obstacle(self.window, "qlearn", learn_mode)
-        
+
         self.clock = py.time.Clock()
-        
+
         self.score = 0
         self.max_score = 0
-        
+
         self.game_over = False
-        
+
         self.kill = False
         self.elapsed_time = 0
         self.elapsed_seconds = 0
         self.start_time = time.time()
         self.learn_mode = learn_mode
-        
 
     def get_state(self):
         # Simplified state representation:
@@ -63,34 +64,38 @@ class QGame:
     def get_action(self, state):
         # Epsilon-greedy exploration
         if random.random() < self.epsilon:
-            return random.choice([0,0,0,1])  # Random action (exploration)
+            return random.choice([0, 0, 0, 1])  # Random action (exploration)
         else:
-            return np.argmax(self.q_table[state])  # Best action from Q-Table (exploitation)
+            # Best action from Q-Table (exploitation)
+            return np.argmax(self.q_table[state])
 
     def play(self):
         for episode in range(self.num_episodes):
             self.reset_game()  # Reset game state for each episode
             total_reward = 0  # Track total reward in this episode
             state = self.get_state()
-            self.epsilon = self.epsilon * 0.95 # Decay epsilon
+            self.epsilon = self.epsilon * 0.95  # Decay epsilon
             while not self.game_over:
                 current_time = time.time()
                 self.elapsed_seconds = int(current_time - self.start_time)
-                dt = self.clock.tick(1//self.TIME_STEP) / 1000  # Control frame rate
+                dt = self.clock.tick(1//self.TIME_STEP) / \
+                    1000  # Control frame rate
                 self.elapsed_time += dt
-                action = self.get_action(state)  # Choose an action based on current state
+                # Choose an action based on current state
+                action = self.get_action(state)
                 self.perform_action(action)  # Perform the chosen action
-                
+
                 self.window.fill(self.color)  # Clear the screen
                 self.update()  # Update game state
                 self.draw()  # Draw game elements
                 self.handle_events()
-                
+
                 py.display.flip()  # Update the display
-                
+
                 next_state = self.get_state()  # Get the new state after the action
-                reward = self.get_reward(next_state, action)  # Get the reward for the action
-                
+                # Get the reward for the action
+                reward = self.get_reward(next_state, action)
+
                 # Update the Q-Table using the Q-Learning update rule
                 current_q = self.q_table[state][action]
                 max_next_q = max(self.q_table[next_state])
@@ -101,7 +106,8 @@ class QGame:
                 state = next_state  # Update the current state
             if self.kill:
                 break
-            print(f"Episode {episode + 1}: Total Reward = {total_reward} Score = {math.ceil(self.score)}")
+            print(f"Episode {
+                  episode + 1}: Total Reward = {total_reward} Score = {math.ceil(self.score)}")
 
         py.quit()  # Quit the game when done
 
@@ -109,7 +115,7 @@ class QGame:
         # Reset the game to the initial state
         self.game_over = False
         self.score = 0
-        self.bird = Bird(self.window,"qlearn")
+        self.bird = Bird(self.window, "qlearn")
         self.obstacle = Obstacle(self.window, "qlearn", self.learn_mode)
 
     def perform_action(self, action):
@@ -123,10 +129,10 @@ class QGame:
         # - Negative reward for collisions
         if self.game_over:
             return -100  # Negative reward for game over
-        
+
         bird_y = next_state[1]
         obstacle_gap_y = next_state[2]
-        
+
         if bird_y > obstacle_gap_y + 10 and action == 0:
             return -1
         elif bird_y < obstacle_gap_y - 10 and action == 1:
@@ -141,37 +147,32 @@ class QGame:
         if self.bird.rect.x >= self.obstacle.rect1.x and self.elapsed_time >= 1:
             self.elapsed_time = 0
             self.score += 1
-            
 
     def draw(self):
         self.bird.draw()
         self.obstacle.draw()
         self.draw_score()
-        
-        
+
         font = py.font.Font(None, 36)
-        text = font.render(str(datetime.timedelta(seconds=self.elapsed_seconds)), True, (255, 255, 255))
+        text = font.render(str(datetime.timedelta(
+            seconds=self.elapsed_seconds)), True, (255, 255, 255))
         self.window.blit(text, (self.WIDTH - 100, 50))
-        
-        
+
         py.display.flip()
 
     def check_collision(self):
         # Check for collisions with obstacles
         if self.bird.rect.colliderect(self.obstacle.rect1) or self.bird.rect.colliderect(self.obstacle.rect2):
             self.game_over = True
-            
+
         # Check if the bird hits the ground or goes out of bounds
         if self.bird.rect.y >= self.HEIGHT - self.bird.height:
             self.game_over = True
-            
+
     def draw_score(self):
         font = py.font.Font(None, 36)
         text = font.render(str(math.ceil(self.score)), True, (255, 255, 255))
         self.window.blit(text, (self.WIDTH // 2, 50))
-        
-
-        
 
     def handle_events(self):
         for event in py.event.get():
