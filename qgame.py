@@ -135,6 +135,7 @@ class QGame:
         if dist_x < 0 and self.elapsed_time >= 2:
             self.elapsed_time = 0
             self.score += 1
+            self.max_score = max(self.max_score, self.score)
             return 10
         if dist_y > 20 and action == 0:
             return -1
@@ -170,8 +171,8 @@ class QGame:
 
     def draw_score(self):
         font = py.font.Font(None, 36)
-        text = font.render(str(math.ceil(self.score)), True, (255, 255, 255))
-        self.window.blit(text, (self.WIDTH // 2, 50))
+        text = font.render(str(math.ceil(self.score)) + f" | max: {self.max_score}", True, (255, 255, 255))
+        self.window.blit(text, (self.WIDTH // 2 - 100, 50))
 
     def handle_events(self):
         for event in py.event.get():
