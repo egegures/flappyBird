@@ -10,17 +10,14 @@ class Obstacle:
         self.window = window
 
         self.x = self.window.get_width()
+        self.velo_x = -3.5
+        
         self.y = self.window.get_height()
         self.width = 25
-        
-        self.velo_x = -3.5
             
         self.rect1 = py.Rect(self.x, 0, self.width, (self.y - 100)//2)
         self.rect2 = py.Rect(self.x, (self.y + 100)//2, self.width, self.y)
-        
-        
-        
-        
+    
     def update(self):
         self.x += self.velo_x
         self.rect1.x = self.x

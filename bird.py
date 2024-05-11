@@ -3,6 +3,7 @@ import pygame as py
 
 class Bird:
     def __init__ (self, window):
+        
         self.window = window
 
         self.y = self.window.get_height()//2

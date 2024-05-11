@@ -26,7 +26,6 @@ class Game:
         self.score = 0
 
         self.clock = py.time.Clock()
-
         self.elapsed_time = 0
 
     def play(self):
@@ -37,9 +36,7 @@ class Game:
             self.handle_events()
             self.update()
             self.draw()
-
             py.display.flip()
-
         py.quit()
 
     def update(self):

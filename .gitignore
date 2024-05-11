@@ -1,4 +1,2 @@
-*.pkl
 _*
-qgame_nn.py
-qgame_multiple.py
+qgame_nn*

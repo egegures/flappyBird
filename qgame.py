@@ -32,7 +32,7 @@ class QGame:
         
         self.window = py.display.set_mode((self.WIDTH, self.HEIGHT))
         
-        self.FPS = 60 * 13
+        self.FPS = 60
         
         self.color = (0, 0, 0)
         py.display.set_caption("Flappy Bird")
@@ -82,8 +82,7 @@ class QGame:
             
             if self.kill:
                 break
-            print(f"Episode {
-                  episode + 1}: Total Reward = {total_reward} Score = {math.ceil(self.score)}")
+            print(f"Episode {episode + 1}: Total Reward = {total_reward} Score = {math.ceil(self.score)}")
 
         py.quit()  # Quit the game when done
         
@@ -104,7 +103,7 @@ class QGame:
         
     # Returns the state described by the distance to the next obstacle and the bird's height relative to the gap
     def get_state(self):
-        obstacle_gap_y = self.obstacle.rect1.height + 50
+        obstacle_gap_y = self.obstacle.rect1.height + 50 # Middle of the gap
         
         dist_x = int(self.obstacle.rect2.x - self.bird.rect.x) 
         dist_y = int(self.bird.rect.y - obstacle_gap_y)
@@ -131,10 +130,9 @@ class QGame:
         dist_x = next_state[0]
         dist_y = next_state[1]
 
-        if dist_x < self.obstacle.rect1.width and self.elapsed_time >= 1 * 60 / self.FPS:
+        if dist_x < 0 and self.elapsed_time >= 60 / self.FPS:
             self.elapsed_time = 0
             self.score += 1
-            self.max_score = max(self.max_score, self.score)
             return 10
         if dist_y > 20 and action == 0: # Bird is below the gap and does not jump
             return -1
@@ -150,7 +148,7 @@ class QGame:
         if self.score > 20: # No exploration after reaching 20 points
             self.epsilon = 0 
         
-        if self.score > self.max_score: # Update max score
+        if self.score > self.max_score: # Update max score and text variables
             self.max_score = self.score
             self.max_score_episode = episode
             self.max_score_time = self.elapsed_seconds

@@ -6,7 +6,7 @@ from collections import defaultdict
 if __name__ == "__main__":
     play_mode = input("Play mode? (play/qlearn):")
     if play_mode == "play":
-        game = Game()  # Play mode, uses game.py, defaults to random obstacles
+        game = Game()  # Play mode, uses game.py, defaults to random obstacles 
     else:
         learn_mode = input("Learn mode? (fixed/random):")
         if learn_mode == "fixed":
