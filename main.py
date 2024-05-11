@@ -15,7 +15,7 @@ if __name__ == "__main__":
                 with open("q_table_fixed.pkl", "rb") as f:
                     q_table = pickle.load(f)
                 print("Model loaded.")
-                game = QGame(q_table = defaultdict(lambda: [0, 0], q_table), epsilon=0.05) # Loaded q_table, learn_mode = "fixed"
+                game = QGame(q_table = defaultdict(lambda: [0, 0], q_table), epsilon=0) # Loaded q_table, learn_mode = "fixed"
             else:
                 game = QGame() # Default epsilon = 0.4, learn_mode = "fixed", default q_table
         else: 
@@ -24,7 +24,7 @@ if __name__ == "__main__":
                 with open("q_table_random.pkl", "rb") as f:
                     q_table = pickle.load(f)
                 print("Model loaded.")
-                game = QGame(q_table = defaultdict(lambda: [0, 0], q_table), epsilon=0.05, learn_mode="random") # Loaded q_table, learn_mode = "random"
+                game = QGame(q_table = defaultdict(lambda: [0, 0], q_table), epsilon=0, learn_mode="random") # Loaded q_table, learn_mode = "random"
             else:
                 game = QGame(learn_mode = "random") # Default epsilon = 0.4, learn_mode = "random", default q_table
         
@@ -36,12 +36,12 @@ if __name__ == "__main__":
         save_model = input("Save model? (y/n):")
         if save_model == "y":
             if learn_mode == "fixed":
-                with open("q_table_fixed.pkl", "wb") as f:
+                with open("q_table_fixed.pkl", "wb") as f: # Save fixed mode q_table to file
                     q_table_dict = dict(game.q_table)
                     pickle.dump(q_table_dict, f)
                 print("Model saved.")
             else: 
-                with open("q_table_random.pkl", "wb") as f:
+                with open("q_table_random.pkl", "wb") as f: # Save random mode q_table to file
                     q_table_dict = dict(game.q_table)
                     pickle.dump(q_table_dict, f)
                 print("Model saved.")

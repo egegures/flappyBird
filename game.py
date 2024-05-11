@@ -1,3 +1,5 @@
+# This does not implement q-learning, only used for test purposes
+
 import bird
 import obstacle
 import pygame as py
@@ -12,13 +14,13 @@ class Game:
         self.TIME_STEP = 0.0166
         
         self.WIDTH = 400
-        self.HEIGHT = 600
+        self.HEIGHT = 400
         self.window = py.display.set_mode((self.WIDTH, self.HEIGHT))
         self.color = (0,0,0)
         py.display.set_caption("Flappy Bird")
         
-        self.bird = bird.Bird(self.window, play_mode = "play", learn_mode = "random")
-        self.obstacle = obstacle.Obstacle(self.window, play_mode = "play", learn_mode = "random")
+        self.bird = bird.Bird(self.window)
+        self.obstacle = obstacle.Obstacle(self.window, learn_mode = "random")
 
         self.game_over = False
         self.score = 0
@@ -41,8 +43,8 @@ class Game:
         py.quit()
         
     def update(self):
-        self.bird.update(self.TIME_STEP)
-        self.obstacle.update(self.TIME_STEP)
+        self.bird.update()
+        self.obstacle.update()
         self.check_collision()
         if self.bird.rect.x > self.obstacle.rect1.x and self.elapsed_time > 1:
             self.elapsed_time = 0
