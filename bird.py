@@ -1,9 +1,10 @@
 import pygame as py
 
+
 class Bird:
     def __init__ (self, window):
         self.window = window
-        
+
         self.y = self.window.get_height()//2
         self.x = 50
 
@@ -24,12 +25,10 @@ class Bird:
         self.velocity_y = min(self.max_velocity, self.acceleration_y + self.velocity_y)
         self.y = max(0, self.y + self.velocity_y)
         self.rect.y = self.y
-        
+
     def jump(self):
         self.acceleration_y = 0
         self.velocity_y = -4.5
         
     def draw(self):
         py.draw.rect(self.window, self.color, self.rect)
-        
-    

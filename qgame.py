@@ -7,7 +7,7 @@ import time
 import numpy as np
 import random
 from collections import defaultdict
-import math 
+import math
 import datetime
 
 # Q-Learning Parameters
@@ -19,14 +19,14 @@ NUM_EPISODES = 10 ** 8 # Number of training episodes
 class QGame:
     def __init__(self, q_table = defaultdict(lambda: [0, 0]), epsilon = 0.4, learn_mode = "fixed"):
         py.init()
-        
+
         self.learning_rate = LEARNING_RATE
         self.discount_factor = DISCOUNT_FACTOR
         self.epsilon = epsilon
         self.num_episodes = NUM_EPISODES
-        
+
         self.q_table = q_table
-        
+
         self.WIDTH = 400
         self.HEIGHT = 400
         
@@ -40,12 +40,12 @@ class QGame:
         self.obstacle = Obstacle(self.window, learn_mode)
         
         self.clock = py.time.Clock()
-        
+
         self.score = 0
         self.max_score = 0
-        
+
         self.game_over = False
-        
+
         self.kill = False
         self.elapsed_time = 0
         self.elapsed_seconds = 0
@@ -72,8 +72,9 @@ class QGame:
                 self.handle_events()
                 
                 next_state = self.get_state()  # Get the new state after the action
-                reward = self.get_reward(next_state, action)  # Get the reward for the action
-                
+                # Get the reward for the action
+                reward = self.get_reward(next_state, action)
+
                 # Update the Q-Table using the Q-Learning update rule
                 self.update_q_table(state, action, next_state, reward)  # Update Q-table
                 total_reward += reward  # Add the reward to the total for this episode
@@ -81,7 +82,8 @@ class QGame:
             
             if self.kill:
                 break
-            print(f"Episode {episode + 1}: Total Reward = {total_reward} Score = {math.ceil(self.score)}")
+            print(f"Episode {
+                  episode + 1}: Total Reward = {total_reward} Score = {math.ceil(self.score)}")
 
         py.quit()  # Quit the game when done
         
@@ -125,13 +127,14 @@ class QGame:
     def get_reward(self, next_state, action):
         if self.game_over:
             return -100  # Negative reward for game over
-        
+
         dist_x = next_state[0]
         dist_y = next_state[1]
 
         if dist_x < self.obstacle.rect1.width and self.elapsed_time >= 1 * 60 / self.FPS:
             self.elapsed_time = 0
             self.score += 1
+            self.max_score = max(self.max_score, self.score)
             return 10
         if dist_y > 20 and action == 0: # Bird is below the gap and does not jump
             return -1

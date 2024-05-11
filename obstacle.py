@@ -1,4 +1,4 @@
-import pygame as py 
+import pygame as py
 import random
 
 
@@ -6,10 +6,9 @@ class Obstacle:
     def __init__ (self, window, learn_mode):
     
         self.learn_mode = learn_mode
-        
+
         self.window = window
 
-        
         self.x = self.window.get_width()
         self.y = self.window.get_height()
         self.width = 25
@@ -35,6 +34,7 @@ class Obstacle:
                 new_y = random.randint(60, self.window.get_height() - 60) # Random height
                 self.rect1.height = new_y - 50
                 self.rect2.y = new_y + 50
+
     def draw(self):
         py.draw.rect(self.window, (255, 255, 255), self.rect1)
         py.draw.rect(self.window, (255, 255, 255), self.rect2)
